@@ -1,0 +1,12 @@
+pip is installed by default with python 2.7
+
+use the following to install modules
+
+pip install <module_name>
+
+e.g. pip install flask
+
+---------------
+
+pip freeze > requirements.txt
+will append the current dependencies installed by pip to a txt file

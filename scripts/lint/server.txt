@@ -1,0 +1,8 @@
+This is a help file containing snippets of code required to get going with pylinting the server side code
+
+
+Install
+pip install pylint
+
+pylint .\service.py --extension-pkg-whitelist servicemanager,win32event,win32service
+All others just use: pylint <script_name>.py

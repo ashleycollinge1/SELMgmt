@@ -1,0 +1,11 @@
+install virtualenv
+
+pip install virtualenv
+
+use the following to make a new folder using virtualenv containing it's own mini python instance
+
+virtualenv dev-env
+
+to activate the python environment use the following
+dev-env\scripts\activate.ps1
+
