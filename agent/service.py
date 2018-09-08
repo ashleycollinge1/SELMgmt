@@ -52,7 +52,7 @@ class WebServer(multiprocessing.Process):
         """
         while not self.exit.is_set():
             flask_app = create_app()
-            host = '192.168.0.31'
+            host = '0.0.0.0' # listen on all addresses
             port = 8003
 
             app_server = WSGIServer((host, port), flask_app, keyfile='agent.key',
