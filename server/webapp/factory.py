@@ -12,3 +12,13 @@ def create_app():
     app = Flask(__name__)
     app.register_blueprint(ADMIN)
     return app
+
+def create_app_testing():
+	"""
+	Create instance of Flask, but with testing=True
+	Allows test_client() to be used
+	"""
+	app = Flask(__name__)
+	app.config['TESTING'] = True
+	app.register_blueprint(ADMIN)
+	return app
