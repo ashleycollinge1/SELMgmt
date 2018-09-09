@@ -5,7 +5,6 @@ import sys
 import unittest
 from flask import Flask
 from webapp.views.general import ADMIN
-from webapp.factory import create_app_testing
 
 
 class WebApp(unittest.TestCase):
