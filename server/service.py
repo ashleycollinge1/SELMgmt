@@ -8,13 +8,14 @@ import sys
 import time
 import socket
 import logging
-import multiprocessing
+from threading import Thread
+from wsgiref.simple_server import make_server
 import win32serviceutil
-from gevent.pywsgi import WSGIServer
 import win32service
 import win32event
 import servicemanager
 from webapp.factory import create_app
+
 
 
 def setup_logging():
@@ -28,43 +29,6 @@ def setup_logging():
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
-
-class WebServer(multiprocessing.Process):
-    """
-    class for controlling web server process
-    """
-    def __init__(self, ):
-        """
-        create process and exit event ready
-        """
-        multiprocessing.Process.__init__(self)
-        self.exit = multiprocessing.Event()
-        self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        file_handler = logging.FileHandler('C:\\clear\\webserver.log')
-        file_handler.setFormatter(formatter)
-        self.logger.addHandler(file_handler)
-
-    def run(self):
-        """
-        run the web server
-        """
-        while not self.exit.is_set():
-            flask_app = create_app()
-            host = '0.0.0.0' # list on all addresses
-            port = 8002
-
-            app_server = WSGIServer((host, port), flask_app, keyfile='server.key',
-                                    certfile='server.crt')
-            app_server.serve_forever()
-
-    def shutdown(self):
-        """
-        callback to shutdown the web server process
-        """
-        self.exit.set()
-
 
 
 class AppServerSvc(win32serviceutil.ServiceFramework):
@@ -105,18 +69,23 @@ class AppServerSvc(win32serviceutil.ServiceFramework):
 
     def main(self):
         """
-        Creates a worker in a separate process to start the web server in
-        Also waits for a stop to be requested to kill the processes
+        creates a new thread for the web server and starts it
+        Waits for stop requested to stop the web server thread
         """
-        process = WebServer()
+        flask_app = create_app()
+        server = make_server('localhost', 8002, flask_app)
+        process = Thread(
+            target=server.serve_forever)
         process.start()
+
+        # start service loop
         while 1:
             time.sleep(2)
             if self.stop_requested:
-                self.logger.info('shutting down')
-                process.terminate()
-                process.join()
-                return
+                server.shutdown()
+                process.join(timeout=2)
+                break
+
 
 
 if __name__ == '__main__':
