@@ -35,6 +35,20 @@ class WebApp(unittest.TestCase):
         reply = self.client.get('/agent/test')
         assert b'hello world' in reply.data
 
+    def test_the_whoami_route(self):
+        """
+        test whether the whoami route returns all of the data
+        and it's the correct return
+        """
+        import socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+        reply = self.client.get('/agent/whoami')
+        assert {'hostname': socket.gethostname(),
+                'ip_address': '{}'.format(IP),
+                'agent_version': '0.0.1'}
+
 
 def main():
     """
