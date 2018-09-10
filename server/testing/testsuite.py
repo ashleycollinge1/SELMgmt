@@ -5,6 +5,7 @@ import sys
 import unittest
 from flask import Flask
 from webapp.views.general import ADMIN
+from webapp.database import init_db
 
 
 class WebApp(unittest.TestCase):
@@ -19,6 +20,7 @@ class WebApp(unittest.TestCase):
         app = Flask(__name__)
         app.config['TESTING'] = True
         app.register_blueprint(ADMIN)
+        init_db()
         self.client = app.test_client()
 
     def tearDown(self):
