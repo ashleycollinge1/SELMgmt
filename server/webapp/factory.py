@@ -3,6 +3,7 @@ This module is used to generate flask apps like a factory
 """
 from flask import Flask
 from webapp.views.general import ADMIN
+from webapp.database import init_db
 
 
 def create_app():
@@ -11,4 +12,5 @@ def create_app():
     """
     app = Flask(__name__)
     app.register_blueprint(ADMIN)
+    init_db()
     return app
