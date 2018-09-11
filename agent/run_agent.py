@@ -39,25 +39,30 @@ def main():
     icons = itertools.cycle(glob.glob('utilities\\resources\\*.ico'))
     hover_text = 'SELAgent'
 
-    def hello(sysTrayIcon):
-        print("Hello World.")
+    def hello(sys_tray_icon):
+        """
+        The hello test function
+        """
+        print "Hello world."
 
-    def switch_icon(sysTrayIcon):
-        sysTrayIcon.icon = next(icons)
-        sysTrayIcon.refresh_icon()
+    def switch_icon(sys_tray_icon):
+        """
+        Set up the next icon for the agent and refresh the icon
+        """
+        sys_tray_icon.icon = next(icons)
+        sys_tray_icon.refresh_icon()
 
     menu_options = (('About', None, hello),
                     ('Switch Icon', None, switch_icon),
                     ('Tools', None, (('Example1', None, hello),
-                                    ('Example2', None, switch_icon))))
-    def bye(sysTrayIcon):
+                                     ('Example2', None, switch_icon))))
+    def bye(sys_tray_icon):
         """
         Callback from when the application is requested to quit
         """
         server.shutdown()
         process.join(timeout=2)
         logger.info('Shutting down webserver')
-        print('Bye, then.')
 
     SysTrayIcon(next(icons), hover_text, menu_options, on_quit=bye, default_menu_index=1)
 
