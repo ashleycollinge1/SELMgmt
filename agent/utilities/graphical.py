@@ -1,3 +1,6 @@
+"""
+Stolen from somewhere on the internet will try and find the source!
+"""
 import os
 import sys
 import win32api         # package pywin32
@@ -10,7 +13,9 @@ except ImportError:
 
 
 class SysTrayIcon(object):
-    '''TODO'''
+    """
+    Class that the systrayicon is based from
+    """
     QUIT = 'QUIT'
     SPECIAL_ACTIONS = [QUIT]
 
@@ -23,7 +28,9 @@ class SysTrayIcon(object):
                  on_quit=None,
                  default_menu_index=None,
                  window_class_name=None,):
-
+        """
+        initialise the class
+        """
         self.icon = icon
         self.hover_text = hover_text
         self.on_quit = on_quit
@@ -72,6 +79,9 @@ class SysTrayIcon(object):
         win32gui.PumpMessages()
 
     def _add_ids_to_menu_options(self, menu_options):
+        """
+        Adds ids to the menu options and returns a list
+        """
         result = []
         for menu_option in menu_options:
             option_text, option_icon, option_action = menu_option
@@ -89,7 +99,9 @@ class SysTrayIcon(object):
         return result
 
     def refresh_icon(self):
-        # Try and find a custom icon
+        """
+        Refresh the icon being used by the application
+        """
         hinst = win32gui.GetModuleHandle(None)
         if os.path.isfile(self.icon):
             icon_flags = win32con.LR_LOADFROMFILE | win32con.LR_DEFAULTSIZE
