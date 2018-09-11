@@ -2,6 +2,7 @@
 This file contains the entry point to the test suite
 """
 import sys
+import json
 import unittest
 from flask import Flask
 from webapp.views.general import AGENT
@@ -29,25 +30,27 @@ class WebApp(unittest.TestCase):
 
     def test_the_test_route(self):
         """
-        Test whether getting from /admin/test returns the correct
+        Test whether getting from /admin/ping returns the correct
         response
         """
-        reply = self.client.get('/agent/test')
-        assert b'hello world' in reply.data
+        reply = self.client.get('/agent/ping')
+        json_data = json.loads(reply.data)
+        assert 'response' in json_data
+        assert 'pong' in json_data['response']
 
     def test_the_whoami_route(self):
         """
         test whether the whoami route returns all of the data
-        and it's the correct return
         """
         import socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(('10.255.255.255', 1))
         IP = s.getsockname()[0]
         reply = self.client.get('/agent/whoami')
-        assert {'hostname': socket.gethostname(),
-                'ip_address': '{}'.format(IP),
-                'agent_version': '0.0.1'}
+        json_data = json.loads(reply.data)
+        assert 'hostname' in json_data
+        assert 'ip_address' in json_data
+        assert 'agent_version' in json_data
 
 
 def main():
