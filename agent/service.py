@@ -26,6 +26,7 @@ def main():
     """
     creates a new thread for the web server and starts it
     Waits for stop requested to stop the web server thread
+    Also creates the systray aspect of the agent software
     """
     logger = setup_logging()
     flask_app = create_app()
