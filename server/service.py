@@ -43,7 +43,7 @@ class AppServerSvc(win32serviceutil.ServiceFramework):
         Create the new service, create new event stating service is starting
         """
         self.logger = setup_logging()
-        self.logger.info('hello')
+        self.logger.info('Started SELAgent-Server')
         win32serviceutil.ServiceFramework.__init__(self, args)
         self.h_waitstop = win32event.CreateEvent(None, 0, 0, None)
         socket.setdefaulttimeout(60)
@@ -57,6 +57,7 @@ class AppServerSvc(win32serviceutil.ServiceFramework):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.h_waitstop)
         self.stop_requested = True
+        self.logger.info('Stopped requested')
 
     def SvcDoRun(self):
         """
@@ -73,18 +74,25 @@ class AppServerSvc(win32serviceutil.ServiceFramework):
         Waits for stop requested to stop the web server thread
         """
         flask_app = create_app()
-        server = make_server('localhost', 8002, flask_app)
-        process = Thread(
-            target=server.serve_forever)
-        process.start()
+        web_server = make_server('localhost', 8002, flask_app)
+        web_server_process = Thread(
+            target=web_server.serve_forever)
+        try:
+            web_server_process.start()
+            self.logger.info('Started Web server on port 8002')
+        except:
+            self.logger.error('Couldn\'t start web server on port 8002, stopping')
 
         # start service loop
         while 1:
             time.sleep(2)
             if self.stop_requested:
-                server.shutdown()
-                process.join(timeout=2)
-                break
+                self.logger.info('Shutting down web server')
+                web_server.shutdown()
+                self.logger.info('Shutting down web server2')
+                web_server_process.join(timeout=2)
+                self.logger.info('Shutting down web server3')
+                break # break out of service loop as stop requested
 
 
 
