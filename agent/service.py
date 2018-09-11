@@ -2,9 +2,12 @@
 This is the agent application, runs silently in the background in the user's session
 """
 import logging
+import itertools
+import glob
 from threading import Thread
 from wsgiref.simple_server import make_server
 from webapp.factory import create_app
+from utilities.graphical import SysTrayIcon
 
 
 def setup_logging():
@@ -32,17 +35,30 @@ def main():
     process.start()
     logger.info('Started Webserver on port 8002')
 
-    running = True
+    icons = itertools.cycle(glob.glob('utilities\\resources\\*.ico'))
+    hover_text = 'SELAgent'
 
-    while 1:
-        if running:
-            # do work here.
-            pass
-        else:
-            server.shutdown()
-            process.join(timeout=2)
-            logger.info('Shutting down webserver')
-            break
+    def hello(sysTrayIcon):
+        print("Hello World.")
+
+    def switch_icon(sysTrayIcon):
+        sysTrayIcon.icon = next(icons)
+        sysTrayIcon.refresh_icon()
+
+    menu_options = (('About', None, hello),
+                    ('Switch Icon', None, switch_icon),
+                    ('Tools', None, (('Example1', None, hello),
+                                    ('Example2', None, switch_icon))))
+    def bye(sysTrayIcon):
+        """
+        Callback from when the application is requested to quit
+        """
+        server.shutdown()
+        process.join(timeout=2)
+        logger.info('Shutting down webserver')
+        print('Bye, then.')
+
+    SysTrayIcon(next(icons), hover_text, menu_options, on_quit=bye, default_menu_index=1)
 
 if __name__ == '__main__':
     main()
