@@ -6,12 +6,12 @@ from flask import Blueprint, jsonify
 
 AGENT = Blueprint('agent', __name__, url_prefix='/agent')
 
-@AGENT.route('/test')
-def test():
+@AGENT.route('/ping')
+def ping():
     """
-    test function, returns hello world to the browser/client
+    ping function, returns pong
     """
-    return 'hello world'
+    return jsonify({'response': 'pong'})
 
 @AGENT.route('/whoami', methods=['GET'])
 def whoami():
