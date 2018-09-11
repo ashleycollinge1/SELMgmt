@@ -2,6 +2,7 @@
 This contains all of the 'general' views relating to the flask app
 """
 import socket
+import getpass
 from flask import Blueprint, jsonify
 
 AGENT = Blueprint('agent', __name__, url_prefix='/agent')
@@ -24,4 +25,5 @@ def whoami():
     IP = s.getsockname()[0]
     return jsonify({'hostname': '{}'.format(socket.gethostname()),
                     'ip_address': '{}'.format(IP),
+                    'username': '{}'.format(getpass.getuser()),
                     'agent_version': '0.0.1'})
