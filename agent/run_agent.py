@@ -41,7 +41,8 @@ def main():
     process.start()
     logger.info('Started Webserver on port 8002')
 
-    icons = 'connected.ico'
+    connected_icon = 'connected.ico'
+    disconnected_icon = 'disconnected.ico'
     hover_text = 'SELAgent'
 
     def hello(var):
@@ -62,7 +63,7 @@ def main():
         process.join(timeout=2)
         logger.info('Shutting down webserver')
 
-    SysTrayIcon(icons, hover_text, menu_options, on_quit=bye, default_menu_index=1)
+    SysTrayIcon(connected_icon, hover_text, menu_options, on_quit=bye, default_menu_index=1)
 
 if __name__ == '__main__':
     main()
