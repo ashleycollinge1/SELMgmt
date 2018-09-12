@@ -41,27 +41,20 @@ def main():
     process.start()
     logger.info('Started Webserver on port 8002')
 
-    icons = itertools.cycle(glob.glob('*.ico'))
+    icons = 'connected.ico'
     hover_text = 'SELAgent'
 
-    def hello(sys_tray_icon):
+    def hello(var):
         """
         The hello test function
         """
         print "Hello world."
 
-    def switch_icon(sys_tray_icon):
-        """
-        Set up the next icon for the agent and refresh the icon
-        """
-        sys_tray_icon.icon = next(icons)
-        sys_tray_icon.refresh_icon()
-
     menu_options = (('About', None, hello),
-                    ('Switch Icon', None, switch_icon),
+                    ('Switch Icon', None, hello),
                     ('Tools', None, (('Example1', None, hello),
-                                     ('Example2', None, switch_icon))))
-    def bye(sys_tray_icon):
+                                     ('Example2', None, hello))))
+    def bye(var):
         """
         Callback from when the application is requested to quit
         """
@@ -69,7 +62,7 @@ def main():
         process.join(timeout=2)
         logger.info('Shutting down webserver')
 
-    SysTrayIcon(next(icons), hover_text, menu_options, on_quit=bye, default_menu_index=1)
+    SysTrayIcon(icons, hover_text, menu_options, on_quit=bye, default_menu_index=1)
 
 if __name__ == '__main__':
     main()
