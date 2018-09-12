@@ -2,16 +2,17 @@
 This contains all of the 'general' views relating to the flask app
 """
 import socket
+import getpass
 from flask import Blueprint, jsonify
 
 AGENT = Blueprint('agent', __name__, url_prefix='/agent')
 
-@AGENT.route('/test')
-def test():
+@AGENT.route('/ping')
+def ping():
     """
-    test function, returns hello world to the browser/client
+    ping function, returns pong
     """
-    return 'hello world'
+    return jsonify({'response': 'pong'})
 
 @AGENT.route('/whoami', methods=['GET'])
 def whoami():
@@ -24,4 +25,5 @@ def whoami():
     IP = s.getsockname()[0]
     return jsonify({'hostname': '{}'.format(socket.gethostname()),
                     'ip_address': '{}'.format(IP),
+                    'username': '{}'.format(getpass.getuser()),
                     'agent_version': '0.0.1'})
