@@ -1,6 +1,7 @@
 """
 This is the agent application, runs silently in the background in the user's session
 """
+import os
 import logging
 import itertools
 import glob
@@ -17,7 +18,11 @@ def setup_logging():
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler = logging.FileHandler('log.log')
+    try:
+        os.mkdir('{}\\SELAgent'.format(os.getenv('APPDATA')))
+    except WindowsError:
+        pass
+    file_handler = logging.FileHandler('{}\\SELAgent\\log.log'.format(os.getenv('APPDATA')))
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     return logger
@@ -36,7 +41,7 @@ def main():
     process.start()
     logger.info('Started Webserver on port 8002')
 
-    icons = itertools.cycle(glob.glob('utilities\\resources\\*.ico'))
+    icons = itertools.cycle(glob.glob('*.ico'))
     hover_text = 'SELAgent'
 
     def hello(sys_tray_icon):
