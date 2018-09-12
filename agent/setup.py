@@ -8,5 +8,5 @@ setup(
         'include_files': ['connected.ico', 'disconnected.ico'],
         'include_msvcr': True,},
         "bdist_msi": {'upgrade_code': '{66620F3A-DC3A-11E2-B341-002219E9B01E}',}},
-    executables = [Executable("run_agent.py",base="Win32GUI")]
+    executables = [Executable("run_agent.py",base="Win32GUI", shortcutName="SELAgent", shortcutDir="StartupFolder")]
     )
