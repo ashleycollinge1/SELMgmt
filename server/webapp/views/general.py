@@ -23,6 +23,23 @@ def test():
     """
     return 'hello world'
 
+@ADMIN.route('/register', methods=['POST'])
+def register():
+    if request.method == 'POST':
+        username = request.json.get('username')
+        password = request.json.get('password')
+        hostname = request.json.get('hostname')
+        windows_user = request.json.get('windows_user')
+        if session.query(Agents).filter_by(username=username).first():
+            return jsonify({'error': 'username already taken'}), 400
+        new_agent = Agents(username=username,
+                            hostname=hostname,
+                            windows_user=windows_user)
+        new_agent.hash_password(password)
+        session.add(new_agent)
+        session.commit()
+        return jsonify({'username': username})
+
  # somewhere to login
 @ADMIN.route("/login", methods=["POST"])
 def login():

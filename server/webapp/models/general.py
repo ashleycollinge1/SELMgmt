@@ -14,6 +14,8 @@ class Agents(Base, UserMixin):
     id = Column(Integer, primary_key=True)
     username = Column(String)
     password_hash = Column(String)
+    hostname = Column(String)
+    windows_user = Column(String)
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
