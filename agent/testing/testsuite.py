@@ -52,6 +52,19 @@ class WebApp(unittest.TestCase):
         assert 'ip_address' in json_data
         assert 'agent_version' in json_data
 
+    def test_the_network_drive(self):
+        """
+        test whether the map network drive
+        endpoint works
+        """
+        response=self.client.post('/agent/map-network-drive', 
+                       data=json.dumps({'network_location': '\\\\10.1.23.14\\Backup'}),
+                       content_type='application/json')
+        #reply = self.client.post('/agent/map-network-drive', data={'network_location': '\\\\10.1.23.14\\Backup'})
+        json_data = json.loads(response.data)
+        assert 'message' in json_data
+        assert 'network_location' in json_data['message']
+
 
 def main():
     """
