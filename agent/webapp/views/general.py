@@ -3,7 +3,7 @@ This contains all of the 'general' views relating to the flask app
 """
 import socket
 import getpass
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 AGENT = Blueprint('agent', __name__, url_prefix='/agent')
 
@@ -27,3 +27,18 @@ def whoami():
                     'ip_address': '{}'.format(IP),
                     'username': '{}'.format(getpass.getuser()),
                     'agent_version': '0.0.1'})
+
+@AGENT.route('/map-network-drive', methods=['POST'])
+def map_network_drive():
+    """
+    map the network drive based on post data
+    """
+    if request.method == 'POST':
+        if not request.get_json()['network_location']:
+            return jsonify({'error': 'network_location not present'}), 400
+        network_location = request.get_json()['network_location']
+        # map network drive here
+        import subprocess
+        command = 'net use * {} /user:synseal.com\\%username%'.format(network_location)
+        subprocess.call(command, shell=True)#net use * \\10.1.23.14\Backup /user:synseal.com\%username%
+        return jsonify({'message': {'network_location': network_location}})
