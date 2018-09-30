@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<testsuite errors="0" failures="0" name="testing.testsuite.WebApp-20180917140548" tests="1" time="0.017">
+	<testcase classname="testing.testsuite.WebApp" name="test_the_test_route" time="0.017"/>
+	<system-out>
+<![CDATA[]]>	</system-out>
+	<system-err>
+<![CDATA[]]>	</system-err>
+</testsuite>
